@@ -1,0 +1,1 @@
+-- create table books (id bigint not null auto_increment, author varchar(50), title varchar(100), number_of_pages bigint primary key (id));
