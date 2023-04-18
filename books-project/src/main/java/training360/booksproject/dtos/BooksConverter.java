@@ -2,6 +2,8 @@ package training360.booksproject.dtos;
 
 import org.mapstruct.Mapper;
 import training360.booksproject.dtos.bookdtos.BookDto;
+import training360.booksproject.dtos.shelfdtos.ShelfDto;
+import training360.booksproject.dtos.userdtos.UserDto;
 import training360.booksproject.model.Book;
 import training360.booksproject.model.Shelf;
 import training360.booksproject.model.User;

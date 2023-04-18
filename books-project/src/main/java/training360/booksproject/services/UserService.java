@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import training360.booksproject.dtos.BooksConverter;
-import training360.booksproject.dtos.CreateUserCommand;
-import training360.booksproject.dtos.UpdateUserCommand;
-import training360.booksproject.dtos.UserDto;
+import training360.booksproject.dtos.userdtos.CreateUserCommand;
+import training360.booksproject.dtos.userdtos.UpdateUserCommand;
+import training360.booksproject.dtos.userdtos.UserDto;
 import training360.booksproject.model.User;
 import training360.booksproject.repositories.UserRepository;
 

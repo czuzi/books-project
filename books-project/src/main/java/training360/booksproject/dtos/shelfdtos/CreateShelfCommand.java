@@ -1,4 +1,4 @@
-package training360.booksproject.dtos;
+package training360.booksproject.dtos.shelfdtos;
 
 import lombok.Data;
 import training360.booksproject.model.User;

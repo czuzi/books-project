@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import training360.booksproject.dtos.CreateUserCommand;
-import training360.booksproject.dtos.UpdateUserCommand;
-import training360.booksproject.dtos.UserDto;
+import training360.booksproject.dtos.userdtos.CreateUserCommand;
+import training360.booksproject.dtos.userdtos.UpdateUserCommand;
+import training360.booksproject.dtos.userdtos.UserDto;
 import training360.booksproject.services.UserService;
 
 import java.util.List;
