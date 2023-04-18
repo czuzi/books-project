@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,12 +17,12 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    private Long id;
 
     @Column(name = "user_name")
     private String userName;
     private String email;
-    @OneToMany(mappedBy = "user_shelves")
-    private List<Shelf> userShelves;
+    private String password;
+    @OneToMany(mappedBy = "user")
+    private List<Shelf> userShelves = new ArrayList<>();
 }

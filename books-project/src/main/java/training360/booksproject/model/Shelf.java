@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,13 +16,11 @@ import java.util.List;
 public class Shelf {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    @Column(name = "shelf_id")
-    private Long shelfId;
+    private Long id;
     @Column(name = "shelf_name")
     private String shelfName;
     @ManyToOne
     private User user;
-    @ManyToMany
-    private List<Book> booksOnThisShelf;
+    @ManyToMany(mappedBy = "shelves")
+    private List<Book> books = new ArrayList<>();
 }

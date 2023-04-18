@@ -10,6 +10,7 @@ import training360.booksproject.model.User;
 @AllArgsConstructor
 public class ShelfDto {
 
+    private Long id;
     private String shelfName;
     private User user;
 }
