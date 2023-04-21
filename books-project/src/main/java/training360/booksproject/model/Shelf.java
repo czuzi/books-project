@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "shelves")
@@ -21,6 +22,6 @@ public class Shelf {
     private String shelfName;
     @ManyToOne
     private User user;
-    @ManyToMany(mappedBy = "shelves")
-    private List<Book> books = new ArrayList<>();
+    @OneToMany(mappedBy = "shelf", cascade = CascadeType.ALL)
+    private Set<ShelvedBook> shelvedBooks;
 }

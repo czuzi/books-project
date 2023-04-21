@@ -15,16 +15,15 @@ import java.util.List;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String author;
     private String title;
     private String isbn;
     @Column(name = "number_of_pages")
     private int numberOfPages;
-    private int yourOfPublish;
+    @Column(name = "year_of_publish")
+    private int yearOfPublish;
     @Enumerated(EnumType.STRING)
     private Genre genre;
-    @ManyToMany()
-    private List<Shelf> shelves = new ArrayList<>();
 }

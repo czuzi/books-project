@@ -7,10 +7,12 @@ import training360.booksproject.dtos.bookdtos.BookDto;
 import training360.booksproject.dtos.BooksConverter;
 import training360.booksproject.dtos.bookdtos.CreateBookCommand;
 import training360.booksproject.dtos.bookdtos.UpdateBookCommand;
+import training360.booksproject.exceptions.BookNotFound;
 import training360.booksproject.model.Book;
 import training360.booksproject.repositories.BookRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,18 +29,18 @@ public class BookService {
     }
 
     public BookDto findBookById(long id) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cannot find a book by this id: " + id));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFound("Cannot find a book by this id: " + id));
         return booksConverter.convert(book);
     }
 
-    public List<BookDto> findAllBooks() {
+    public List<BookDto> findAllBooks(Optional<String> title) {
         List<Book> books = bookRepository.findAll();
         return booksConverter.convertBooks(books);
     }
 
     public BookDto updateBookById(long id, UpdateBookCommand command) {
         Book book = bookRepository.findById(id).orElseThrow(() ->
-                new ResourceAccessException("Cannot find a book by this id: " + id));
+                new BookNotFound("Cannot find a book by this id: " + id));
         makeBookByUpdateCommand(command, book);
         bookRepository.save(book);
         return booksConverter.convert(book);
@@ -46,7 +48,7 @@ public class BookService {
 
     public void deleteBookById(long id) {
         Book book = bookRepository.findById(id).orElseThrow(() ->
-                new ResourceAccessException("Cannot find a book by this id: " + id));
+                new BookNotFound("Cannot find a book by this id: " + id));
         bookRepository.delete(book);
     }
 

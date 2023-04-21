@@ -1,6 +1,10 @@
-CREATE TABLE books (
-    book_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    author VARCHAR(255) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    isbn VARCHAR(13) NOT NULL
+create table books
+(
+    id              bigint auto_increment primary key,
+    author          varchar(255) not null,
+    genre           varchar(255) not null,
+    isbn            varchar(255) not null,
+    number_of_pages int          not null,
+    title           varchar(255) not null,
+    year_of_publish int          not null
 );

@@ -8,4 +8,16 @@
         <sqlFile path="create-books-table.sql"
                  relativeToChangelogFile="true" />
     </changeSet>
+    <changeSet id="create-users-table" author="Istvan">
+        <sqlFile path="create-users-table.sql"
+                 relativeToChangelogFile="true" />
+    </changeSet>
+    <changeSet id="create-shelves-table" author="Istvan">
+        <sqlFile path="create-shelves-table.sql"
+                 relativeToChangelogFile="true" />
+    </changeSet>
+    <changeSet id="create-shelved_books-table" author="Istvan">
+        <sqlFile path="create-shelved_books-table.sql"
+                 relativeToChangelogFile="true" />
+    </changeSet>
 </databaseChangeLog>

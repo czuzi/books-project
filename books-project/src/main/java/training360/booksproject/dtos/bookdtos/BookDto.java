@@ -15,5 +15,6 @@ public class BookDto {
     private String title;
     private String isbn;
     private int numberOfPages;
+    private int yearOfPublish;
     private Genre genre;
 }

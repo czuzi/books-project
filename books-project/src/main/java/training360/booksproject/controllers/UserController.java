@@ -1,5 +1,6 @@
 package training360.booksproject.controllers;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserCommand command) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserCommand command) {
         UserDto createdUser = userService.createUser(command);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }

@@ -1,16 +1,17 @@
 package training360.booksproject.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -24,5 +25,5 @@ public class User {
     private String email;
     private String password;
     @OneToMany(mappedBy = "user")
-    private List<Shelf> userShelves = new ArrayList<>();
+    private Set<Shelf> userSelves = new HashSet<>();
 }
