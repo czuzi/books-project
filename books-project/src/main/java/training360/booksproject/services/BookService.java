@@ -1,13 +1,12 @@
 package training360.booksproject.services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
-import training360.booksproject.dtos.bookdtos.BookDto;
 import training360.booksproject.dtos.BooksConverter;
-import training360.booksproject.dtos.bookdtos.CreateBookCommand;
-import training360.booksproject.dtos.bookdtos.UpdateBookCommand;
-import training360.booksproject.exceptions.BookNotFound;
+import training360.booksproject.dtos.bookdtos.BookDto;
+import training360.booksproject.dtos.bookdtos.CreateUpdateBookCommand;
+import training360.booksproject.exceptions.BookNotFoundException;
 import training360.booksproject.model.Book;
 import training360.booksproject.repositories.BookRepository;
 
@@ -21,7 +20,8 @@ public class BookService {
     private BookRepository bookRepository;
     private BooksConverter booksConverter;
 
-    public BookDto createBook(CreateBookCommand command) {
+    @Transactional
+    public BookDto createBook(CreateUpdateBookCommand command) {
         Book book = new Book();
         makeBookByCreateCommand(command, book);
         bookRepository.save(book);
@@ -29,38 +29,41 @@ public class BookService {
     }
 
     public BookDto findBookById(long id) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFound("Cannot find a book by this id: " + id));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Cannot find a book by this id: " + id));
         return booksConverter.convert(book);
     }
 
     public List<BookDto> findAllBooks(Optional<String> title) {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepository.findBooksByTitle(title);
         return booksConverter.convertBooks(books);
     }
 
-    public BookDto updateBookById(long id, UpdateBookCommand command) {
+    @Transactional
+    public BookDto updateBookById(long id, CreateUpdateBookCommand command) {
         Book book = bookRepository.findById(id).orElseThrow(() ->
-                new BookNotFound("Cannot find a book by this id: " + id));
+                new BookNotFoundException("Cannot find a book by this id: " + id));
         makeBookByUpdateCommand(command, book);
         bookRepository.save(book);
         return booksConverter.convert(book);
     }
 
+    @Transactional
     public void deleteBookById(long id) {
         Book book = bookRepository.findById(id).orElseThrow(() ->
-                new BookNotFound("Cannot find a book by this id: " + id));
+                new BookNotFoundException("Cannot find a book by this id: " + id));
         bookRepository.delete(book);
     }
 
-    private void makeBookByCreateCommand(CreateBookCommand command, Book book) {
+    private void makeBookByCreateCommand(CreateUpdateBookCommand command, Book book) {
         book.setAuthor(command.getAuthor());
         book.setTitle(command.getTitle());
         book.setIsbn(command.getIsbn());
         book.setNumberOfPages(command.getNumberOfPages());
+        book.setYearOfPublish(command.getYearOfPublish());
         book.setGenre(command.getGenre());
     }
 
-    private void makeBookByUpdateCommand(UpdateBookCommand command, Book book) {
+    private void makeBookByUpdateCommand(CreateUpdateBookCommand command, Book book) {
         if (command.getAuthor() != null){
             book.setAuthor(command.getAuthor());
         }

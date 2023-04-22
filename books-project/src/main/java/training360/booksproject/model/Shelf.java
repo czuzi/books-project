@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,5 +24,5 @@ public class Shelf {
     @ManyToOne
     private User user;
     @OneToMany(mappedBy = "shelf", cascade = CascadeType.ALL)
-    private Set<ShelvedBook> shelvedBooks;
+    private Set<ShelvedBook> shelvedBooks = new HashSet<>();
 }

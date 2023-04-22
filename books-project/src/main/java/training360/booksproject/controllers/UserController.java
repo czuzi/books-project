@@ -11,6 +11,7 @@ import training360.booksproject.dtos.userdtos.UserDto;
 import training360.booksproject.services.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,8 +27,8 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
     @GetMapping
-    public List<UserDto> findAllUsers() {
-        return userService.findAllUser();
+    public List<UserDto> findAllUsers(@Valid @RequestParam Optional<String> username) {
+        return userService.findAllUser(username);
     }
     @GetMapping("/{id}")
     public UserDto findUserById(@PathVariable long id) {
@@ -38,5 +39,10 @@ public class UserController {
     public ResponseEntity<UserDto> updateUser(@PathVariable long id, @RequestBody UpdateUserCommand command) {
         UserDto updatedUser = userService.updateUser(id, command);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@Valid @PathVariable long id) {
+        userService.deleteUser(id);
     }
 }

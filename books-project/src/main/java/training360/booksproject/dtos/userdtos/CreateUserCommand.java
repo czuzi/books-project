@@ -11,13 +11,13 @@ public class CreateUserCommand {
 
     @NotBlank(message = "username is mandatory")
     @NotNull
-    private String userName;
+    private String username;
     @NotNull
     @NotBlank(message = "email is mandatory")
     @Email
     private String email;
     @NotNull
-    @NotBlank
+    @NotBlank(message = "password is mandatory")
     @ValidPassword
     private String password;
 }
