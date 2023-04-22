@@ -33,8 +33,8 @@ public class BookService {
         return booksConverter.convert(book);
     }
 
-    public List<BookDto> findAllBooks(Optional<String> title) {
-        List<Book> books = bookRepository.findBooksByTitle(title);
+    public List<BookDto> findAllBooks(Optional<String> author) {
+        List<Book> books = bookRepository.findBooksByTitle(author);
         return booksConverter.convertBooks(books);
     }
 
@@ -73,7 +73,10 @@ public class BookService {
         if (command.getIsbn() != null) {
             book.setIsbn(command.getIsbn());
         }
-        if (command.getNumberOfPages() != 0) {
+        if (command.getNumberOfPages() > 0) {
+            book.setNumberOfPages(command.getNumberOfPages());
+        }
+        if (command.getYearOfPublish() != 0) {
             book.setNumberOfPages(command.getNumberOfPages());
         }
         if (command.getGenre() != null) {

@@ -30,8 +30,8 @@ public class BookController {
     }
 
     @GetMapping
-    public List<BookDto> findAllBooks(@Valid @RequestParam Optional<String> title) {
-        return bookService.findAllBooks(title);
+    public List<BookDto> findAllBooks(@Valid @RequestParam Optional<String> author) {
+        return bookService.findAllBooks(author);
     }
 
     @PutMapping("/{id}")

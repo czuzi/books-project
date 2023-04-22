@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    @Query("select b from Book b where :title is null or b.title = :title")
-    List<Book> findBooksByTitle(Optional<String> title);
+    @Query("select b from Book b where :author is null or b.author = :author")
+    List<Book> findBooksByTitle(Optional<String> author);
 }
