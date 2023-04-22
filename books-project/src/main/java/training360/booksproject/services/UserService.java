@@ -41,13 +41,14 @@ public class UserService {
     }
 
     public UserDto updateUser(long id, UpdateUserCommand command) {
-        User user = userRepository.getReferenceById(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Cannot find user with id: " + id));
         if (command.getUsername() != null) {
             user.setUsername(command.getUsername());
         }
         if (command.getEmail() != null) {
             user.setEmail(command.getEmail());
         }
+        userRepository.save(user);
         return converter.convert(user);
     }
 

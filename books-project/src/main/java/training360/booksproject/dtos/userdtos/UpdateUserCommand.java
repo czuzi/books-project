@@ -1,16 +1,20 @@
 package training360.booksproject.dtos.userdtos;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
+import training360.booksproject.validators.ValidPassword;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateUserCommand {
 
     @NotBlank(message = "username is mandatory")
-    @NotNull
     private String username;
     @NotBlank(message = "email is mandatory")
-    @NotNull
     private String email;
+    @NotBlank(message = "password is mandatory")
+    @ValidPassword
+    private String password;
 }

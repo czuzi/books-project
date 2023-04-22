@@ -4,10 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.passay.*;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 
@@ -17,16 +14,8 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
-        Properties props = new Properties();
-        try {
-            props.load(new FileInputStream("passay.properties"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        MessageResolver resolver = new PropertiesMessageResolver(props);
 
         PasswordValidator validator = new PasswordValidator(
-                resolver,
                 new LengthRule(8, 30),
                 new CharacterRule(EnglishCharacterData.UpperCase, 1),
                 new CharacterRule(EnglishCharacterData.LowerCase, 1),

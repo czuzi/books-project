@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleInvalidBookArguments(MethodArgumentNotValidException e){
         ProblemDetail detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,e.getMessage());
-        detail.setType(URI.create("books/not-valid"));
+        detail.setType(URI.create("validation/not-valid"));
         return detail;
     }
 

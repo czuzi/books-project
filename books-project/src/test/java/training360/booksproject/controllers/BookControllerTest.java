@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ProblemDetail;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import training360.booksproject.dtos.bookdtos.BookDto;
 import training360.booksproject.dtos.bookdtos.CreateUpdateBookCommand;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(statements = {"delete from books"})
 class BookControllerTest {
 
     @Autowired
@@ -64,7 +66,7 @@ class BookControllerTest {
                 .expectBody(ProblemDetail.class)
                 .returnResult().getResponseBody();
 
-        assertEquals(URI.create("books/not-valid"), problem.getType());
+        assertEquals(URI.create("validation/not-valid"), problem.getType());
         assertTrue(problem.getDetail().startsWith("Validation failed"));
     }
 
@@ -110,11 +112,22 @@ class BookControllerTest {
     @Test
     void testFindBookById() {
         BookDto found = webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("api/books/{id}").build(bookDto.getId()))
+                .uri((uriBuilder -> uriBuilder.path("api/books/{id}").build(bookDto.getId())))
                 .exchange()
                 .expectBody(BookDto.class)
                 .returnResult().getResponseBody();
         assertEquals("The Corrections", found.getTitle());
+    }
+
+    @Test
+    void testFindBookByIdWithInvalidId() {
+        problem = webClient.get()
+                .uri("api/books/234")
+                .exchange()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+        assertEquals(URI.create("books/not-found"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("Cannot find a book by this id: 234"));
     }
 
     @Test

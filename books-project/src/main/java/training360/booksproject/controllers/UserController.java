@@ -3,7 +3,6 @@ package training360.booksproject.controllers;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import training360.booksproject.dtos.userdtos.CreateUserCommand;
 import training360.booksproject.dtos.userdtos.UpdateUserCommand;
@@ -22,9 +21,8 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserCommand command) {
-        UserDto createdUser = userService.createUser(command);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public UserDto createUser(@Valid @RequestBody CreateUserCommand command) {
+        return userService.createUser(command);
     }
     @GetMapping
     public List<UserDto> findAllUsers(@Valid @RequestParam Optional<String> username) {
@@ -36,9 +34,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable long id, @RequestBody UpdateUserCommand command) {
-        UserDto updatedUser = userService.updateUser(id, command);
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    public UserDto updateUser(@PathVariable long id, @RequestBody UpdateUserCommand command) {
+        return userService.updateUser(id, command);
     }
 
     @DeleteMapping("/{id}")
