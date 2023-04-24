@@ -101,6 +101,13 @@ Végpontok:
 
 ## Technológiai részletek
 
-Itt le tudjátok írni, hogy háromrétű, MariaDb, SwaggerUI, Repository, Service, Controller, Docker, Nem kell hogy hosszú legyen.
+Használt technológiák:
+
+- `Java`
+- `SpringBoot`
+- `Spring-data-jpa`
+- `Hibernate`
+- `WebClient`
+- `Passay`
 
 ---
