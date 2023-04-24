@@ -17,9 +17,9 @@ public class ShelfController {
     private ShelfService shelfService;
     private ShelvedBookService shelvedBookService;
 
-    @PostMapping("/{userId}")
+    @PostMapping("/{userId}/shelves")
     @ResponseStatus(HttpStatus.CREATED)
-    public ShelfDto createShelf(@Valid @PathVariable long userId, CreateUpdateShelfCommand command) {
+    public ShelfDto createShelf(@Valid @PathVariable long userId, @RequestBody CreateUpdateShelfCommand command) {
         return shelfService.createShelf(userId, command);
     }
 

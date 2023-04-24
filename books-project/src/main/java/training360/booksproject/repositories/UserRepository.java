@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("select u from User u where :username is null or u.username = :username")
+    @Query("select u from User u where (:username is null or u.username like concat('%', :username, '%'))")
     List<User> findAllUser(Optional<String> username);
 }

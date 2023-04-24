@@ -1,8 +1,6 @@
 package training360.booksproject.dtos.userdtos;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +15,7 @@ public class CreateUserCommand {
 
     @NotBlank(message = "username is mandatory")
     @NotNull
+    @Size(min = 6, max = 16)
     private String username;
     @NotNull
     @NotBlank(message = "email is mandatory")

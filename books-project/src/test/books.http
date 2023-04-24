@@ -1,0 +1,30 @@
+###
+POST http://localhost:8080/api/books
+Content-Type: application/json
+
+{
+  "author": "Murakami Haruki",
+  "title": "1Q84",
+  "isbn": "1234123",
+  "numberOfPages": 432,
+  "yearOfPublish": 1889,
+  "genre": "CONTEMPORARY"
+}
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "asdfasd",
+  "email": "murakami@haruki.jp",
+  "password": "Aadsa123##"
+}
+
+###
+POST http://localhost:8080/api/users/3/shelves
+Content-Type: application/json
+
+{
+  "shelfName": "favourites"
+}

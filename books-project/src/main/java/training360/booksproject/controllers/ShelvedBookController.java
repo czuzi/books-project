@@ -30,7 +30,7 @@ public class ShelvedBookController {
     public ShelvedBookDto updateShelvedBook(@Valid @PathVariable("userId") long userid,
                                             @PathVariable("shelfId") long shelfId,
                                             @PathVariable("shelvedBookId") long shelvedBookId,
-                                            UpdateShelvedBookCommand command) {
+                                            @RequestBody UpdateShelvedBookCommand command) {
         return shelvedBookService.updateShelvedBook(userid, shelfId, shelvedBookId, command);
     }
 

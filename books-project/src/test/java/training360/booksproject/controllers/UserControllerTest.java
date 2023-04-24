@@ -90,6 +90,6 @@ class UserControllerTest {
                 .exchange()
                 .expectBody(UserDto.class)
                 .returnResult().getResponseBody();
-        assertEquals("johndoe@something.hu", found.getEmail());
+        assertEquals("johndoesmith@something.hu", found.getEmail());
     }
 }
