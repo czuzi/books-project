@@ -55,4 +55,10 @@ public class UserService {
     public void deleteUser(long id) {
         userRepository.deleteById(id);
     }
+
+//    public List<ShelfDto> getAllShelvesByUser(long id) {
+//        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Cannot find user with id: " + id));
+//        List<Shelf> shelves = userRepository.getAllShelvesByUser(id);
+//        return converter.convertShelves(shelves);
+//    }
 }

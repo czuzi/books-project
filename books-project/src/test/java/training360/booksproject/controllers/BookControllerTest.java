@@ -8,7 +8,8 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import training360.booksproject.dtos.bookdtos.BookDto;
-import training360.booksproject.dtos.bookdtos.CreateUpdateBookCommand;
+import training360.booksproject.dtos.bookdtos.CreateBookCommand;
+import training360.booksproject.dtos.bookdtos.UpdateBookCommand;
 import training360.booksproject.model.Genre;
 
 import java.net.URI;
@@ -28,7 +29,7 @@ class BookControllerTest {
 
     @BeforeEach
     void init() {
-        CreateUpdateBookCommand command = new CreateUpdateBookCommand("Jonathan Franzen",
+        CreateBookCommand command = new CreateBookCommand("Jonathan Franzen",
                 "The Corrections",
                 "1234567890",
                 871,
@@ -52,7 +53,7 @@ class BookControllerTest {
 
     @Test
     void testCreateBookWithInvalidData() {
-        CreateUpdateBookCommand command = new CreateUpdateBookCommand("Jonathan Franzen",
+        CreateBookCommand command = new CreateBookCommand("Jonathan Franzen",
                 null,
                 "1234567890",
                 871,
@@ -72,13 +73,13 @@ class BookControllerTest {
 
     @Test
     void testFindAllBooks() {
-        CreateUpdateBookCommand command = new CreateUpdateBookCommand("Jonathan Franzen",
+        CreateBookCommand command = new CreateBookCommand("Jonathan Franzen",
                 "The Corrections",
                 "1234567890",
                 871,
                 1993,
                 Genre.CONTEMPORARY);
-        CreateUpdateBookCommand command2 = new CreateUpdateBookCommand("Haruki Murakami",
+        CreateBookCommand command2 = new CreateBookCommand("Haruki Murakami",
                 "1Q84",
                 "12351123",
                 421,
@@ -134,7 +135,7 @@ class BookControllerTest {
     void testUpdateBook() {
         BookDto updated = webClient.put()
                 .uri(uriBuilder -> uriBuilder.path("api/books/{id}").build(bookDto.getId()))
-                .bodyValue(new CreateUpdateBookCommand(null, null, "000888888", 0, 0, null))
+                .bodyValue(new UpdateBookCommand(null, null, "000888888", 0, 0, null))
                 .exchange()
                 .expectBody(BookDto.class)
                 .returnResult().getResponseBody();

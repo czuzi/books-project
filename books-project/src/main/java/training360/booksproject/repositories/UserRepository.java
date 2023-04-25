@@ -13,4 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where (:username is null or u.username like concat('%', :username, '%'))")
     List<User> findAllUser(Optional<String> username);
+
+//    @Query("select distinct u from User u left join fetch u.userSelves where u.id = :id")
+//    List<Shelf> getAllShelvesByUser(long id);
 }

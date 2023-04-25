@@ -42,4 +42,9 @@ public class UserController {
     public void deleteUser(@Valid @PathVariable long id) {
         userService.deleteUser(id);
     }
+
+//    @GetMapping("/{id}")
+//    public List<ShelfDto> getAllShelvesByUser(@PathVariable long id) {
+//        return userService.getAllShelvesByUser(id);
+//    }
 }

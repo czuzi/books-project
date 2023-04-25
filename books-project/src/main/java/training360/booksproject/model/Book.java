@@ -1,10 +1,9 @@
 package training360.booksproject.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "books")
@@ -21,9 +20,9 @@ public class Book {
     private String title;
     private String isbn;
     @Column(name = "number_of_pages")
-    private int numberOfPages;
+    private Integer numberOfPages;
     @Column(name = "year_of_publish")
-    private int yearOfPublish;
+    private Integer yearOfPublish;
     @Enumerated(EnumType.STRING)
     private Genre genre;
 }

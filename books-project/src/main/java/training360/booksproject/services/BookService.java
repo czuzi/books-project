@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import training360.booksproject.dtos.BooksConverter;
 import training360.booksproject.dtos.bookdtos.BookDto;
-import training360.booksproject.dtos.bookdtos.CreateUpdateBookCommand;
+import training360.booksproject.dtos.bookdtos.CreateBookCommand;
+import training360.booksproject.dtos.bookdtos.UpdateBookCommand;
 import training360.booksproject.exceptions.BookNotFoundException;
 import training360.booksproject.model.Book;
 import training360.booksproject.repositories.BookRepository;
@@ -21,7 +22,7 @@ public class BookService {
     private BooksConverter booksConverter;
 
     @Transactional
-    public BookDto createBook(CreateUpdateBookCommand command) {
+    public BookDto createBook(CreateBookCommand command) {
         Book book = new Book();
         makeBookByCreateCommand(command, book);
         bookRepository.save(book);
@@ -39,7 +40,7 @@ public class BookService {
     }
 
     @Transactional
-    public BookDto updateBookById(long id, CreateUpdateBookCommand command) {
+    public BookDto updateBookById(long id, UpdateBookCommand command) {
         Book book = bookRepository.findById(id).orElseThrow(() ->
                 new BookNotFoundException("Cannot find a book by this id: " + id));
         makeBookByUpdateCommand(command, book);
@@ -54,7 +55,7 @@ public class BookService {
         bookRepository.delete(book);
     }
 
-    private void makeBookByCreateCommand(CreateUpdateBookCommand command, Book book) {
+    private void makeBookByCreateCommand(CreateBookCommand command, Book book) {
         book.setAuthor(command.getAuthor());
         book.setTitle(command.getTitle());
         book.setIsbn(command.getIsbn());
@@ -63,7 +64,7 @@ public class BookService {
         book.setGenre(command.getGenre());
     }
 
-    private void makeBookByUpdateCommand(CreateUpdateBookCommand command, Book book) {
+    private void makeBookByUpdateCommand(UpdateBookCommand command, Book book) {
         if (command.getAuthor() != null){
             book.setAuthor(command.getAuthor());
         }
@@ -73,10 +74,10 @@ public class BookService {
         if (command.getIsbn() != null) {
             book.setIsbn(command.getIsbn());
         }
-        if (command.getNumberOfPages() > 0) {
+        if (command.getNumberOfPages() != null) {
             book.setNumberOfPages(command.getNumberOfPages());
         }
-        if (command.getYearOfPublish() != 0) {
+        if (command.getYearOfPublish() != null) {
             book.setNumberOfPages(command.getNumberOfPages());
         }
         if (command.getGenre() != null) {

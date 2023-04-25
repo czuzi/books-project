@@ -9,6 +9,9 @@ import training360.booksproject.dtos.shelfdtos.ShelfDto;
 import training360.booksproject.services.ShelfService;
 import training360.booksproject.services.ShelvedBookService;
 
+import java.util.Optional;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api/users")
 @AllArgsConstructor
@@ -19,14 +22,19 @@ public class ShelfController {
 
     @PostMapping("/{userId}/shelves")
     @ResponseStatus(HttpStatus.CREATED)
-    public ShelfDto createShelf(@Valid @PathVariable long userId, @RequestBody CreateUpdateShelfCommand command) {
+    public ShelfDto createShelf(@PathVariable long userId, @Valid @RequestBody CreateUpdateShelfCommand command) {
         return shelfService.createShelf(userId, command);
+    }
+
+    @GetMapping("/{userId}/shelves")
+    public Set<ShelfDto> getShelves(@PathVariable long userId, @RequestParam Optional<String > shelfName) {
+        return shelfService.getShelves(userId, shelfName);
     }
 
     @PutMapping("/{userId}/shelves/{shelfId}")
     public ShelfDto updateShelf(@Valid @PathVariable("userId") long userId,
                                 @PathVariable("shelfId")long shelfId,
-                                CreateUpdateShelfCommand command) {
+                                @Valid @RequestBody CreateUpdateShelfCommand command) {
         return shelfService.updateShelf(userId, shelfId, command);
     }
 

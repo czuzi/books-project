@@ -12,7 +12,12 @@ import training360.booksproject.dtos.shelfdtos.ShelfDto;
 import training360.booksproject.dtos.userdtos.CreateUserCommand;
 import training360.booksproject.dtos.userdtos.UserDto;
 
+import java.net.URI;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(statements = {"delete from shelves", "delete from users"})
@@ -47,8 +52,41 @@ class ShelfControllerTest {
 
         assertEquals("favourites", shelf.getShelfName());
     }
-//    @Test
-//    void testCreateShelfProblem() {
-//
-//    }
+    @Test
+    void testCreateShelfWithInvalidData() {
+        problem = webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user.getId()))
+                .bodyValue(new CreateUpdateShelfCommand(""))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+        assertEquals(URI.create("validation/not-valid"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("Validation failed"));
+    }
+
+    @Test
+    void getShelves() {
+        webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user.getId()))
+                .bodyValue(new CreateUpdateShelfCommand("favourites"))
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(ShelfDto.class)
+                .returnResult().getResponseBody();
+        webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user.getId()))
+                .bodyValue(new CreateUpdateShelfCommand("others"))
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(ShelfDto.class)
+                .returnResult().getResponseBody();
+        List<ShelfDto> shelves = webClient.get()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user.getId()))
+                .exchange()
+                .expectBodyList(ShelfDto.class)
+                .returnResult().getResponseBody();
+
+        assertThat(shelves).hasSize(2);
+    }
 }

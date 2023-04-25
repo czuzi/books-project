@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import training360.booksproject.dtos.bookdtos.BookDto;
-import training360.booksproject.dtos.bookdtos.CreateUpdateBookCommand;
+import training360.booksproject.dtos.bookdtos.CreateBookCommand;
+import training360.booksproject.dtos.bookdtos.UpdateBookCommand;
 import training360.booksproject.services.BookService;
 
 import java.util.List;
@@ -20,12 +21,12 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookDto createBook(@Valid @RequestBody CreateUpdateBookCommand command) {
+    public BookDto createBook(@Valid @RequestBody CreateBookCommand command) {
         return bookService.createBook(command);
     }
 
     @GetMapping("/{id}")
-    public BookDto getBookById(@Valid @PathVariable long id) {
+    public BookDto getBookById(@PathVariable long id) {
         return bookService.findBookById(id);
     }
 
@@ -35,7 +36,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBook(@PathVariable long id, @RequestBody CreateUpdateBookCommand command) {
+    public BookDto updateBook(@PathVariable long id, @RequestBody UpdateBookCommand command) {
         return bookService.updateBookById(id, command);
     }
 

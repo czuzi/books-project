@@ -12,21 +12,18 @@ import training360.booksproject.model.Genre;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateUpdateBookCommand {
+public class CreateBookCommand {
 
-    @NotNull
     @NotBlank(message = "Validation failed")
     private String author;
-    @NotNull
     @NotBlank(message = "Validation failed")
     private String title;
-    @NotNull
     @NotBlank(message = "Validation failed")
     private String isbn;
     @NotNull
-    private int numberOfPages;
+    private Integer numberOfPages;
     @NotNull
-    private int yearOfPublish;
+    private Integer yearOfPublish;
     @NotNull
     private Genre genre;
 }

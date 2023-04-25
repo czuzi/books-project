@@ -28,3 +28,7 @@ Content-Type: application/json
 {
   "shelfName": "favourites"
 }
+
+###
+GET http://localhost:8080/api/users/1/shelves
+Accept: application/json
