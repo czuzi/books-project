@@ -47,10 +47,10 @@ public class ShelvedBookService {
     }
 
     @Transactional
-    public ShelvedBookDto updateShelvedBook(long userid, long shelfId, long shelvedBookId, UpdateShelvedBookCommand command) {
-        validateUser(userid);
+    public ShelvedBookDto updateShelvedBook(long userId, long shelfId, long shelvedBookId, UpdateShelvedBookCommand command) {
+        validateUser(userId);
         validateShelf(shelfId);
-        ShelvedBook shelvedBook = shelvedBookRepository.findById(shelfId).orElseThrow(() ->
+        ShelvedBook shelvedBook = shelvedBookRepository.findById(shelvedBookId).orElseThrow(() ->
                 new ShelvedBookNotFoundException("Cannot find shelved book with id: " + shelvedBookId));
         shelvedBook.setReadDate(command.getReadDate());
         shelvedBookRepository.save(shelvedBook);

@@ -27,11 +27,12 @@ public class ShelfController {
     }
 
     @GetMapping("/{userId}/shelves")
-    public Set<ShelfDto> getShelves(@PathVariable long userId, @RequestParam Optional<String > shelfName) {
+    public Set<ShelfDto> getShelves(@PathVariable long userId, @RequestParam Optional<String> shelfName) {
         return shelfService.getShelves(userId, shelfName);
     }
 
     @PutMapping("/{userId}/shelves/{shelfId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ShelfDto updateShelf(@Valid @PathVariable("userId") long userId,
                                 @PathVariable("shelfId")long shelfId,
                                 @Valid @RequestBody CreateUpdateShelfCommand command) {

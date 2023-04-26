@@ -19,7 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"delete from books"})
+@Sql(statements = {"delete from book_id",
+        "delete from shelved_books",
+        "delete from shelves",
+        "delete from users",
+        "delete from books"})
 class BookControllerTest {
 
     @Autowired
@@ -73,13 +77,15 @@ class BookControllerTest {
 
     @Test
     void testFindAllBooks() {
-        CreateBookCommand command = new CreateBookCommand("Jonathan Franzen",
+        CreateBookCommand command = new CreateBookCommand(
+                "Jonathan Franzen",
                 "The Corrections",
                 "1234567890",
                 871,
                 1993,
                 Genre.CONTEMPORARY);
-        CreateBookCommand command2 = new CreateBookCommand("Haruki Murakami",
+        CreateBookCommand command2 = new CreateBookCommand(
+                "Haruki Murakami",
                 "1Q84",
                 "12351123",
                 421,
@@ -88,11 +94,13 @@ class BookControllerTest {
         webClient.post()
                 .uri("api/books")
                 .bodyValue(command)
-                .exchange();
+                .exchange()
+                .expectStatus().isCreated();
         webClient.post()
                 .uri("api/books")
                 .bodyValue(command2)
-                .exchange();
+                .exchange()
+                .expectStatus().isCreated();
 
         List<BookDto> books = webClient.get()
                 .uri("api/books")
@@ -102,7 +110,7 @@ class BookControllerTest {
         assertThat(books)
                 .hasSize(3);
         List<BookDto> filteredBooks = webClient.get()
-                .uri("api/books?author=Jonathan Franzen")
+                .uri("api/books?searchTerm=Franzen")
                 .exchange()
                 .expectBodyList(BookDto.class)
                 .returnResult().getResponseBody();

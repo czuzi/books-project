@@ -20,7 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"delete from shelves", "delete from users"})
+@Sql(statements = {"delete from book_id",
+        "delete from shelved_books",
+        "delete from shelves",
+        "delete from users",
+        "delete from books"})
 class ShelfControllerTest {
 
     @Autowired
@@ -67,6 +71,34 @@ class ShelfControllerTest {
 
     @Test
     void getShelves() {
+        createShelves();
+        List<ShelfDto> shelves = webClient.get()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user.getId()))
+                .exchange()
+                .expectBodyList(ShelfDto.class)
+                .returnResult().getResponseBody();
+
+        assertThat(shelves).hasSize(2)
+                .map(ShelfDto::getShelfName)
+                .contains("favourites");
+    }
+
+    @Test
+    void getShelvesWithSearchTerm() {
+        createShelves();
+        List<ShelfDto> shelves = webClient.get()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves?shelfName=oth").build(user.getId()))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ShelfDto.class)
+                .returnResult().getResponseBody();
+
+        assertThat(shelves).hasSize(1)
+                .map(ShelfDto::getShelfName)
+                .contains("others");
+    }
+
+    private void createShelves() {
         webClient.post()
                 .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user.getId()))
                 .bodyValue(new CreateUpdateShelfCommand("favourites"))
@@ -81,12 +113,5 @@ class ShelfControllerTest {
                 .expectStatus().isCreated()
                 .expectBody(ShelfDto.class)
                 .returnResult().getResponseBody();
-        List<ShelfDto> shelves = webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user.getId()))
-                .exchange()
-                .expectBodyList(ShelfDto.class)
-                .returnResult().getResponseBody();
-
-        assertThat(shelves).hasSize(2);
     }
 }

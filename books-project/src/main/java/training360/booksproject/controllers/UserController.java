@@ -25,15 +25,18 @@ public class UserController {
         return userService.createUser(command);
     }
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<UserDto> findAllUsers(@Valid @RequestParam Optional<String> username) {
         return userService.findAllUser(username);
     }
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public UserDto findUserById(@PathVariable long id) {
         return userService.findUserById(id);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public UserDto updateUser(@PathVariable long id, @RequestBody UpdateUserCommand command) {
         return userService.updateUser(id, command);
     }
@@ -42,9 +45,4 @@ public class UserController {
     public void deleteUser(@Valid @PathVariable long id) {
         userService.deleteUser(id);
     }
-
-//    @GetMapping("/{id}")
-//    public List<ShelfDto> getAllShelvesByUser(@PathVariable long id) {
-//        return userService.getAllShelvesByUser(id);
-//    }
 }

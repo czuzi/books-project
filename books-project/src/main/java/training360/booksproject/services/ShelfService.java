@@ -66,6 +66,7 @@ public class ShelfService {
     public Set<ShelfDto> getShelves(long userId, Optional<String> shelfName) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("Cannot find user with this id: " + userId));
-        return converter.convertShelves(user.getUserSelves());
+        Set<Shelf> shelves = shelfRepository.findShelves(userId, shelfName);
+        return converter.convertShelves(shelves);
     }
 }

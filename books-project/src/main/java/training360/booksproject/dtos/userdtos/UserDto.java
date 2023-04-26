@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import training360.booksproject.model.Shelf;
+import training360.booksproject.dtos.shelfdtos.ShelfDto;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,5 +19,5 @@ public class UserDto {
     private String username;
     private String email;
     private String password;
-    private Set<Shelf> userSelves = new HashSet<>();
+    private Set<ShelfDto> userSelves = new HashSet<>();
 }

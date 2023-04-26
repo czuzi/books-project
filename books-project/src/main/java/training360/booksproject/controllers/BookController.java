@@ -26,16 +26,19 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public BookDto getBookById(@PathVariable long id) {
         return bookService.findBookById(id);
     }
 
     @GetMapping
-    public List<BookDto> findAllBooks(@Valid @RequestParam Optional<String> author) {
-        return bookService.findAllBooks(author);
+    @ResponseStatus(HttpStatus.OK)
+    public List<BookDto> findAllBooks(@RequestParam Optional<String> searchTerm) {
+        return bookService.findAllBooks(searchTerm);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public BookDto updateBook(@PathVariable long id, @RequestBody UpdateBookCommand command) {
         return bookService.updateBookById(id, command);
     }

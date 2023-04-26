@@ -34,8 +34,8 @@ public class BookService {
         return booksConverter.convert(book);
     }
 
-    public List<BookDto> findAllBooks(Optional<String> author) {
-        List<Book> books = bookRepository.findBooksByTitle(author);
+    public List<BookDto> findAllBooks(Optional<String> searchTerm) {
+        List<Book> books = bookRepository.findBooksByTitle(searchTerm);
         return booksConverter.convertBooks(books);
     }
 
