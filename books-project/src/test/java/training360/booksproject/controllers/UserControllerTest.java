@@ -12,7 +12,9 @@ import training360.booksproject.dtos.userdtos.UpdateUserCommand;
 import training360.booksproject.dtos.userdtos.UserDto;
 
 import java.net.URI;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -78,6 +80,17 @@ class UserControllerTest {
                 .returnResult().getResponseBody();
         assertEquals(URI.create("users/not-found"), problem.getType());
         assertTrue(problem.getDetail().startsWith("Cannot find user"));
+    }
+
+    @Test
+    void testfindAllUser() {
+        List<UserDto> users = webClient.get()
+                .uri("api/users?username=john")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDto.class)
+                .returnResult().getResponseBody();
+        assertThat(users).hasSize(1).map(UserDto::getUsername).contains("johndoe");
     }
 
     @Test

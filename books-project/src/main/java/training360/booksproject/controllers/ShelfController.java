@@ -9,8 +9,8 @@ import training360.booksproject.dtos.shelfdtos.ShelfDto;
 import training360.booksproject.services.ShelfService;
 import training360.booksproject.services.ShelvedBookService;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,7 +27,7 @@ public class ShelfController {
     }
 
     @GetMapping("/{userId}/shelves")
-    public Set<ShelfDto> getShelves(@PathVariable long userId, @RequestParam Optional<String> shelfName) {
+    public List<ShelfDto> getShelves(@PathVariable("userId") long userId, @RequestParam Optional<String> shelfName) {
         return shelfService.getShelves(userId, shelfName);
     }
 

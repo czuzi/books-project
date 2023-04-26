@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    @Query("select b from Book b where (:author is null or CONCAT(b.author, ' ',b.title, ' ', b.isbn) like concat('%', :searchTerm, '%'))")
-    List<Book> findBooksByTitle(Optional<String> searchTerm);
+    @Query("select b from Book b where :searchTerm is null or CONCAT(b.author, ' ',b.title) like concat('%', :searchTerm, '%')")
+    List<Book> findAllBooks(Optional<String> searchTerm);
 }

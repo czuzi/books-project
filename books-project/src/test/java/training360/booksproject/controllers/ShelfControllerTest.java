@@ -72,6 +72,18 @@ class ShelfControllerTest {
     @Test
     void getShelves() {
         createShelves();
+        UserDto user2 = webClient.post()
+                .uri("api/users")
+                .bodyValue(new CreateUserCommand("janedoe", "janedoe@something.hu", "A12as!214"))
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(UserDto.class)
+                .returnResult().getResponseBody();
+        webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user2.getId()))
+                .bodyValue(new CreateUpdateShelfCommand("horrors"))
+                .exchange()
+                .expectStatus().isCreated();
         List<ShelfDto> shelves = webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves").build(user.getId()))
                 .exchange()
@@ -87,7 +99,7 @@ class ShelfControllerTest {
     void getShelvesWithSearchTerm() {
         createShelves();
         List<ShelfDto> shelves = webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves?shelfName=oth").build(user.getId()))
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves?shelfName=others").build(user.getId()))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ShelfDto.class)

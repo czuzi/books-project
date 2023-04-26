@@ -11,7 +11,6 @@ import training360.booksproject.model.ShelvedBook;
 import training360.booksproject.model.User;
 
 import java.util.List;
-import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface BooksConverter {
@@ -21,7 +20,7 @@ public interface BooksConverter {
     ShelfDto convert(Shelf shelf);
     ShelvedBookDto convert (ShelvedBook shelvedBook);
     List<BookDto> convertBooks(List<Book> books);
-    Set<ShelfDto> convertShelves(Set<Shelf> shelves);
+    List<ShelfDto> convertShelves(List<Shelf> shelves);
     List<UserDto> convertUsers(List<User> users);
     List<ShelvedBookDto> convertShelvedBooks(List<ShelvedBook> shelvedBooks);
 

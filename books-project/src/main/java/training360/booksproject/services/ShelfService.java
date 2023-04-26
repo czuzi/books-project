@@ -14,8 +14,8 @@ import training360.booksproject.model.User;
 import training360.booksproject.repositories.ShelfRepository;
 import training360.booksproject.repositories.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -63,10 +63,10 @@ public class ShelfService {
         }
     }
 
-    public Set<ShelfDto> getShelves(long userId, Optional<String> shelfName) {
+    public List<ShelfDto> getShelves(long userId, Optional<String> shelfName) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("Cannot find user with this id: " + userId));
-        Set<Shelf> shelves = shelfRepository.findShelves(userId, shelfName);
+        List<Shelf> shelves = shelfRepository.findShelves(userId, shelfName);
         return converter.convertShelves(shelves);
     }
 }

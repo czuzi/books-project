@@ -3,13 +3,17 @@ POST http://localhost:8080/api/books
 Content-Type: application/json
 
 {
-  "author": "Murakami Haruki",
-  "title": "1Q84",
-  "isbn": "1234123",
-  "numberOfPages": 432,
-  "yearOfPublish": 1889,
-  "genre": "CONTEMPORARY"
+  "author": "Veres Attila",
+  "title": "Black Maybe",
+  "isbn": "12341sd23",
+  "numberOfPages": 341,
+  "yearOfPublish": 2022,
+  "genre": "HORROR"
 }
+
+###
+GET http://localhost:8080/api/books?searchTerm=Maybe
+Accept: application/json
 
 ###
 POST http://localhost:8080/api/users
@@ -31,4 +35,8 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/api/users/1/shelves
+Accept: application/json
+
+###
+GET http://localhost:8080/api/users/1/shelves?shelfName=kami
 Accept: application/json
