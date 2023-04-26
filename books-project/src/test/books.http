@@ -5,14 +5,30 @@ Content-Type: application/json
 {
   "author": "Veres Attila",
   "title": "Black Maybe",
-  "isbn": "12341sd23",
+  "isbn": "1234123412341",
   "numberOfPages": 341,
   "yearOfPublish": 2022,
   "genre": "HORROR"
 }
 
 ###
-GET http://localhost:8080/api/books?searchTerm=Maybe
+POST http://localhost:8080/api/books
+Content-Type: application/json
+
+{
+"author": "Jonathan Franzen",
+"title": "Crossroads",
+"isbn": "3213213213211",
+"numberOfPages": 841,
+"yearOfPublish": 2021,
+"genre": "CONTEMPORARY"
+}
+
+###
+DELETE http://localhost:8080/api/books/3
+
+###
+GET http://localhost:8080/api/books?searchTerm=ttila
 Accept: application/json
 
 ###
