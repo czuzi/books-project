@@ -20,7 +20,7 @@ public class ShelvedBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinTable(name = "books_on_shelves")
+    @JoinColumn
     private Book book;
     @Column(name = "read_data")
     private LocalDate readDate;

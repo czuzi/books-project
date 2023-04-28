@@ -13,6 +13,7 @@ import training360.booksproject.exceptions.UserNotFoundException;
 import training360.booksproject.model.Book;
 import training360.booksproject.model.Shelf;
 import training360.booksproject.model.ShelvedBook;
+import training360.booksproject.model.User;
 import training360.booksproject.repositories.BookRepository;
 import training360.booksproject.repositories.ShelfRepository;
 import training360.booksproject.repositories.ShelvedBookRepository;
@@ -20,6 +21,7 @@ import training360.booksproject.repositories.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -33,7 +35,7 @@ public class ShelvedBookService {
 
     @Transactional
     public ShelvedBookDto createShelvedBook(long userId, long shelfId, long bookId) {
-        validateUser(userId);
+        validateUserAndShelf(userId, shelfId);
         Book book = bookRepository.findById(bookId).orElseThrow(() ->
                 new BookNotFoundException("Cannot find book with id: " + bookId));
         Shelf shelf = shelfRepository.findById(shelfId).orElseThrow(() ->
@@ -48,8 +50,7 @@ public class ShelvedBookService {
 
     @Transactional
     public ShelvedBookDto updateShelvedBook(long userId, long shelfId, long shelvedBookId, UpdateShelvedBookCommand command) {
-        validateUser(userId);
-        validateShelf(shelfId);
+        validateUserAndShelf(userId, shelfId);
         ShelvedBook shelvedBook = shelvedBookRepository.findById(shelvedBookId).orElseThrow(() ->
                 new ShelvedBookNotFoundException("Cannot find shelved book with id: " + shelvedBookId));
         shelvedBook.setReadDate(command.getReadDate());
@@ -57,43 +58,42 @@ public class ShelvedBookService {
         return converter.convert(shelvedBook);
     }
 
-    private void validateUser(long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("Cannot find user with id: " + userId);
-        }
-    }
-
-    private void validateShelf(long shelfId) {
-        if (!shelfRepository.existsById(shelfId)) {
-            throw new ShelfNotFoundException("Cannot find shelf with id: " + shelfId);
-        }
-    }
-
-    private void validateShelvedBook(long shelvedBookId) {
-        if (!shelvedBookRepository.existsById(shelvedBookId)) {
-            throw new ShelfNotFoundException("Cannot find book on this shelf with id: " + shelvedBookId);
-        }
+    private void validateUserAndShelf(long userId, long shelfId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Cannot find user with id: " + userId));
+        user.getUserSelves().stream()
+                .map(Shelf::getId)
+                .findAny()
+                .orElseThrow(() -> new ShelfNotFoundException("Cannot find shelf with id: " + shelfId + " for user: " +user.getUsername()));
     }
 
     @Transactional
     public void deleteShelvedBook(long userId, long shelfId, long shelvedBookId) {
-        validateUser(userId);
-        validateShelf(shelfId);
-        validateShelvedBook(shelvedBookId);
-        shelvedBookRepository.deleteById(shelvedBookId);
+        validateUserAndShelf(userId, shelfId);
+        ShelvedBook shelvedBook = shelvedBookRepository.findById(shelvedBookId)
+                        .orElseThrow(() ->
+                                new ShelvedBookNotFoundException("Cannot find book with id " + shelvedBookId + "on shelf " + shelfId));
+        shelvedBook.setBook(null);
+        shelvedBookRepository.delete(shelvedBook);
     }
 
-    public List<ShelvedBookDto> findAllShelvedBooks(long userId, long shelfId) {
-        validateUser(userId);
-        validateShelf(shelfId);
-        return converter.convertShelvedBooks(shelvedBookRepository.findAll());
+    public List<ShelvedBookDto> findAllShelvedBooksByShelf(long userId, long shelfId, Optional<String> searchTerm) {
+        validateUserAndShelf(userId, shelfId);
+        List<ShelvedBook> books = shelvedBookRepository.findAllShelvedBooksByShelf(shelfId, searchTerm);
+        return converter.convertShelvedBooks(books);
     }
 
     public ShelvedBookDto findShelvedBookById(long userId, long shelfId, long shelvedBookId) {
-        validateUser(userId);
-        validateShelf(shelfId);
+        validateUserAndShelf(userId, shelfId);
         ShelvedBook book = shelvedBookRepository.findById(shelvedBookId).orElseThrow(() ->
                 new ShelvedBookNotFoundException("Cannot find book on this shelf with id: " + shelvedBookId));
         return converter.convert(book);
+    }
+
+    public List<ShelvedBookDto> findAllShelvedBooksByUser(long userId, Optional<Integer> year) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException("Cannot find user with id: " + userId);
+        }
+        List<ShelvedBook> books = shelvedBookRepository.findAllShelvedBooksByUser(userId, year);
+        return converter.convertShelvedBooks(books);
     }
 }

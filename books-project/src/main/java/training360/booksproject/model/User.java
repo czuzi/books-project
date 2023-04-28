@@ -23,6 +23,6 @@ public class User {
     private String username;
     private String email;
     private String password;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Shelf> userSelves = new HashSet<>();
 }

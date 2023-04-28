@@ -9,6 +9,7 @@ import training360.booksproject.dtos.shelvedbookdtos.UpdateShelvedBookCommand;
 import training360.booksproject.services.ShelvedBookService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,6 +26,26 @@ public class ShelvedBookController {
         return shelvedBookService.createShelvedBook(userId, shelfId, bookId);
     }
 
+    @GetMapping("/{userId}/shelves/{shelfId}/books")
+    public List<ShelvedBookDto> findAllShelvedBooks(@PathVariable("userId") long userId,
+                                                    @PathVariable("shelfId") long shelfId,
+                                                    @RequestParam Optional<String> searchTerm) {
+        return shelvedBookService.findAllShelvedBooksByShelf(userId, shelfId, searchTerm);
+    }
+
+    @GetMapping("/{userId}/shelves/{shelfId}/books/{shelvedBookId}")
+    public ShelvedBookDto findShelvedBookById(@PathVariable("userId") long userId,
+                                              @PathVariable("shelfId") long shelfId,
+                                              @PathVariable("shelvedBookId") long shelvedBookId) {
+        return shelvedBookService.findShelvedBookById(userId, shelfId, shelvedBookId);
+    }
+
+    @GetMapping("/{userId}/books")
+    public List<ShelvedBookDto> findAllBooksByUser(@PathVariable long userId,
+                                                   @RequestParam Optional<Integer> year) {
+        return shelvedBookService.findAllShelvedBooksByUser(userId, year);
+    }
+
     @PutMapping("/{userId}/shelves/{shelfId}/books/{shelvedBookId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ShelvedBookDto updateShelvedBook(@PathVariable("userId") long userId,
@@ -35,22 +56,9 @@ public class ShelvedBookController {
     }
 
     @DeleteMapping("/{userId}/shelves/{shelfId}/books/{shelvedBookId}")
-    public void deleteShelvedBook(@PathVariable("userId") long userid,
+    public void deleteShelvedBook(@PathVariable("userId") long userId,
                                   @PathVariable("shelfId") long shelfId,
                                   @PathVariable("shelvedBookId") long shelvedBookId) {
-        shelvedBookService.deleteShelvedBook(userid, shelfId, shelvedBookId);
-    }
-
-    @GetMapping("/{userId}/shelves/{shelfId}/books")
-    public List<ShelvedBookDto> findAllShelvedBooks(@PathVariable("userId") long userId,
-                                                    @PathVariable("shelfId") long shelfId) {
-        return shelvedBookService.findAllShelvedBooks(userId, shelfId);
-    }
-
-    @GetMapping("/{userId}/shelves/{shelfId}/books/{shelvedBookId}")
-    public ShelvedBookDto findShelvedBookById(@PathVariable("userId") long userId,
-                                              @PathVariable("shelfId") long shelfId,
-                                              @PathVariable("shelvedBookId") long shelvedBookId) {
-        return shelvedBookService.findShelvedBookById(userId, shelfId, shelvedBookId);
+        shelvedBookService.deleteShelvedBook(userId, shelfId, shelvedBookId);
     }
 }

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"delete from book_id",
+@Sql(statements = {"delete from books_on_shelves",
         "delete from shelved_books",
         "delete from shelves",
         "delete from users",
@@ -46,7 +46,7 @@ class ShelvedBookControllerTest {
     void init() {
         CreateBookCommand command = new CreateBookCommand("Jonathan Franzen",
                 "The Corrections",
-                "1234567890",
+                "1234561234564",
                 871,
                 1993,
                 Genre.CONTEMPORARY);
@@ -59,7 +59,7 @@ class ShelvedBookControllerTest {
                 .returnResult().getResponseBody();
         CreateBookCommand command2 = new CreateBookCommand("Veres Attila",
                 "A valosag helyreallitasa",
-                "222333444",
+                "1234561234564",
                 421,
                 2022,
                 Genre.HORROR);

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"delete from book_id",
+@Sql(statements = {"delete from books_on_shelves",
         "delete from shelved_books",
         "delete from shelves",
         "delete from users",
@@ -35,7 +35,7 @@ class BookControllerTest {
     void init() {
         CreateBookCommand command = new CreateBookCommand("Jonathan Franzen",
                 "The Corrections",
-                "1234567890",
+                "1234561234564",
                 871,
                 1993,
                 Genre.CONTEMPORARY);
@@ -59,7 +59,7 @@ class BookControllerTest {
     void testCreateBookWithInvalidData() {
         CreateBookCommand command = new CreateBookCommand("Jonathan Franzen",
                 null,
-                "1234567890",
+                "1234561234564",
                 871,
                 1993,
                 Genre.CONTEMPORARY);
@@ -80,14 +80,14 @@ class BookControllerTest {
         CreateBookCommand command = new CreateBookCommand(
                 "Jonathan Franzen",
                 "The Corrections",
-                "1234567890",
+                "1234561234564",
                 871,
                 1993,
                 Genre.CONTEMPORARY);
         CreateBookCommand command2 = new CreateBookCommand(
                 "Haruki Murakami",
                 "1Q84",
-                "12351123",
+                "1234561234564",
                 421,
                 2021,
                 Genre.HORROR);

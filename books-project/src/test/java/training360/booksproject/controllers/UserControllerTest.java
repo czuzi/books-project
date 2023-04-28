@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"delete from book_id",
+@Sql(statements = {"delete from books_on_shelves",
         "delete from shelved_books",
         "delete from shelves",
         "delete from users",

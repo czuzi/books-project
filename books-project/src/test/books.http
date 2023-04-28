@@ -36,13 +36,37 @@ POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-  "username": "asdfasd",
-  "email": "murakami@haruki.jp",
+  "username": "john doe",
+  "email": "john@doe.com",
   "password": "Aadsa123##"
 }
 
 ###
-POST http://localhost:8080/api/users/3/shelves
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+"username": "jane doe",
+"email": "jane@doe.com",
+"password": "Aadsa123sda##"
+}
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "jane",
+  "email": "jane@doe.com",
+  "password": "invalidpassword"
+}
+
+###
+GET http://localhost:8080/api/users
+Accept: application/json
+
+###
+POST http://localhost:8080/api/users/1/shelves
 Content-Type: application/json
 
 {
@@ -50,9 +74,17 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:8080/api/users/2/shelves
+Content-Type: application/json
+
+{
+"shelfName": "romantic"
+}
+
+###
 GET http://localhost:8080/api/users/1/shelves
 Accept: application/json
 
 ###
-GET http://localhost:8080/api/users/1/shelves?shelfName=kami
+GET http://localhost:8080/api/users/1/shelves?shelfName=vou
 Accept: application/json

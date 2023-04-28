@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ShelfRepository extends JpaRepository<Shelf, Long> {
-//    @Query("select s from Shelf s where (:shelfName is null or s.shelfName like concat('%', :shelfName, '%') and s.user.id = :userId)")
-    @Query("SELECT s FROM Shelf s WHERE (:shelfName is null or s.shelfName like CONCAT('%', :shelfName, '%')) and s.user.id = :userId")
+    @Query("SELECT s FROM Shelf s WHERE (:shelfName is null or lower(s.shelfName) like CONCAT('%', lower(:shelfName), '%')) and s.user.id = :userId")
     List<Shelf> findShelves(long userId, Optional<String> shelfName);
 }
