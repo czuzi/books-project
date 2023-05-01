@@ -19,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"delete from books_on_shelves",
-        "delete from shelved_books",
+@Sql(statements = {"delete from shelved_books",
         "delete from shelves",
         "delete from users",
         "delete from books"})
@@ -59,6 +58,34 @@ class UserControllerTest {
 
         assertEquals(URI.create("validation/not-valid"), problem.getType());
         assertTrue(problem.getDetail().startsWith("Validation failed"));
+    }
+
+    @Test
+    void testCreateUserThatAlreadyExist() {
+        problem = webClient.post()
+                .uri("api/users")
+                .bodyValue(new CreateUserCommand("johndoe", "johndoe2@something.hu", "A123asd!@"))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+
+        assertEquals(URI.create("validation/not-valid"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("Username already"));
+    }
+
+    @Test
+    void testCreateUserWithEmailAlreadyTaken() {
+        problem = webClient.post()
+                .uri("api/users")
+                .bodyValue(new CreateUserCommand("johndoe2", "johndoe@something.hu", "A123asd!@"))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+
+        assertEquals(URI.create("validation/not-valid"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("User already exists with email"));
     }
 
     @Test

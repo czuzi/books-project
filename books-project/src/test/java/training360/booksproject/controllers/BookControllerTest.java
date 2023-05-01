@@ -19,8 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"delete from books_on_shelves",
-        "delete from shelved_books",
+@Sql(statements = {"delete from shelved_books",
         "delete from shelves",
         "delete from users",
         "delete from books"})

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import training360.booksproject.dtos.BooksConverter;
 import training360.booksproject.dtos.shelfdtos.CreateUpdateShelfCommand;
 import training360.booksproject.dtos.shelfdtos.ShelfDto;
+import training360.booksproject.exceptions.AlreadyExistsException;
 import training360.booksproject.exceptions.CollectionNotEmptyException;
 import training360.booksproject.exceptions.ShelfNotFoundException;
 import training360.booksproject.exceptions.UserNotFoundException;
@@ -29,6 +30,7 @@ public class ShelfService {
     public ShelfDto createShelf(long userId, CreateUpdateShelfCommand command){
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("Cannot find user with this id: " + userId));
+        checkIfShelfNameAvailable(command.getShelfName(), user.getId());
         Shelf shelf = new Shelf();
         shelf.setShelfName(command.getShelfName());
         shelf.setUser(user);
@@ -36,9 +38,16 @@ public class ShelfService {
         return converter.convert(shelf);
     }
 
+    private void checkIfShelfNameAvailable(String shelfName, long userId) {
+        if (shelfRepository.existsByShelfNameAndUser_Id(shelfName, userId)) {
+            throw new AlreadyExistsException("Shelf name already taken: " + shelfName);
+        }
+    }
+
     @Transactional
     public ShelfDto updateShelf(long userId, long shelfId, CreateUpdateShelfCommand command) {
         validateUser(userId);
+        checkIfShelfNameAvailable(command.getShelfName(), userId);
         Shelf shelf = shelfRepository.findById(shelfId).orElseThrow(() ->
                 new ShelfNotFoundException("Cannot find shelf with this id: " + shelfId));
         shelf.setShelfName(command.getShelfName());
@@ -64,9 +73,14 @@ public class ShelfService {
     }
 
     public List<ShelfDto> getShelves(long userId, Optional<String> shelfName) {
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new UserNotFoundException("Cannot find user with this id: " + userId));
+        validateUser(userId);
         List<Shelf> shelves = shelfRepository.findShelves(userId, shelfName);
         return converter.convertShelves(shelves);
+    }
+
+    public ShelfDto getShelfById(long userId, long shelfId) {
+        validateUser(userId);
+        Shelf shelf = shelfRepository.findById(shelfId).orElseThrow(() -> new ShelfNotFoundException("Cannot find shelf with id: " + shelfId));
+        return converter.convert(shelf);
     }
 }

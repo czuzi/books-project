@@ -31,6 +31,11 @@ public class ShelfController {
         return shelfService.getShelves(userId, shelfName);
     }
 
+    @GetMapping("/{userId}/shelves/{shelfId}")
+    public ShelfDto getShelfById(@PathVariable("userId") long userId, @PathVariable("shelfId") long shelfId) {
+        return shelfService.getShelfById(userId, shelfId);
+    }
+
     @PutMapping("/{userId}/shelves/{shelfId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ShelfDto updateShelf(@Valid @PathVariable("userId") long userId,

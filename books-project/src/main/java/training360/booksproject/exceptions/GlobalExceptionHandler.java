@@ -52,4 +52,11 @@ public class GlobalExceptionHandler {
         detail.setType(URI.create("shelves/not-valid"));
         return detail;
     }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ProblemDetail handleBookNotFound(AlreadyExistsException e) {
+        ProblemDetail detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        detail.setType(URI.create("validation/not-valid"));
+        return detail;
+    }
 }

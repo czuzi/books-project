@@ -17,16 +17,17 @@ import training360.booksproject.dtos.userdtos.CreateUserCommand;
 import training360.booksproject.dtos.userdtos.UserDto;
 import training360.booksproject.model.Genre;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"delete from books_on_shelves",
-        "delete from shelved_books",
+@Sql(statements = {"delete from shelved_books",
         "delete from shelves",
         "delete from users",
         "delete from books"})
@@ -65,7 +66,7 @@ class ShelvedBookControllerTest {
                 Genre.HORROR);
         book2 = webClient.post()
                 .uri("api/books")
-                .bodyValue(command)
+                .bodyValue(command2)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(BookDto.class)
@@ -98,6 +99,65 @@ class ShelvedBookControllerTest {
                 .returnResult().getResponseBody();
 
         assertEquals("Jonathan Franzen", shelvedBook.getBook().getAuthor());
+    }
+
+    @Test
+    void testCreateShelvedBookAlreadyExists() {
+        createShelvedBooks();
+        problem = webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves/{shelfId}/books")
+                        .queryParam("bookId", book1.getId())
+                        .build(user.getId(), shelf.getId()))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+
+        assertEquals(URI.create("validation/not-valid"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("Book " + book1.getTitle() + " already on shelf "));
+    }
+
+    @Test
+    void testCreateShelvedBookWithInvalidUserId() {
+        problem = webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves/{shelfId}/books")
+                        .queryParam("bookId", book1.getId())
+                        .build(-1L, shelf.getId()))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+        assertEquals(URI.create("users/not-found"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("Cannot find user with id"));
+    }
+
+    @Test
+    void testCreateShelvedBookWithInvalidShelfId() {
+        problem = webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves/{shelfId}/books")
+                        .queryParam("bookId", book1.getId())
+                        .build(user.getId(), -2L))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+        assertEquals(URI.create("shelf/not-found"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("Cannot find shelf with id:"));
+    }
+
+    @Test
+    void testCreateShelvedBookThatAlreadyExists() {
+        createShelvedBooks();
+        problem = webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves/{shelfId}/books")
+                        .queryParam("bookId", book1.getId())
+                        .build(user.getId(), shelf.getId()))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+        assertEquals(URI.create("validation/not-valid"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("Book " + book1.getTitle() + " already on shelf"));
     }
 
     @Test
@@ -167,4 +227,38 @@ class ShelvedBookControllerTest {
         assertEquals(LocalDate.now(), updated.getReadDate());
     }
 
+    @Test
+    void testDeleteShelvedBook() {
+        createShelvedBooks();
+
+        webClient.delete()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{userId}/shelves/{shelfId}/books/{shelvedBookId}")
+                .build(user.getId(), shelf.getId(), shelvedBook.getId()))
+                .exchange()
+                .expectStatus().isOk();
+
+        List<ShelvedBookDto> shelvedBooks = webClient.get()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{id}/shelves/{shelfId}/books").
+                        build(user.getId(), shelf.getId()))
+                .exchange()
+                .expectBodyList(ShelvedBookDto.class)
+                .returnResult().getResponseBody();
+        assertThat(shelvedBooks).hasSize(1)
+                .map(ShelvedBookDto::getBook)
+                .map(BookDto::getTitle)
+                .startsWith("A valosag helyreallitasa");
+    }
+
+    @Test
+    void testDeleteShelvedBookWithInvalidId() {
+        problem = webClient.delete()
+                .uri(uriBuilder -> uriBuilder.path("api/users/{userId}/shelves/{shelfId}/books/{shelvedBookId}")
+                        .build(user.getId(), shelf.getId(), -1L))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ProblemDetail.class)
+                .returnResult().getResponseBody();
+        assertEquals(URI.create("shelved-book/not-found"), problem.getType());
+        assertTrue(problem.getDetail().startsWith("Cannot find"));
+    }
 }

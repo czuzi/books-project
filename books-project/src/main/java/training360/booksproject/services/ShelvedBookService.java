@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import training360.booksproject.dtos.BooksConverter;
 import training360.booksproject.dtos.shelvedbookdtos.ShelvedBookDto;
 import training360.booksproject.dtos.shelvedbookdtos.UpdateShelvedBookCommand;
-import training360.booksproject.exceptions.BookNotFoundException;
-import training360.booksproject.exceptions.ShelfNotFoundException;
-import training360.booksproject.exceptions.ShelvedBookNotFoundException;
-import training360.booksproject.exceptions.UserNotFoundException;
+import training360.booksproject.exceptions.*;
 import training360.booksproject.model.Book;
 import training360.booksproject.model.Shelf;
 import training360.booksproject.model.ShelvedBook;
@@ -40,6 +37,9 @@ public class ShelvedBookService {
                 new BookNotFoundException("Cannot find book with id: " + bookId));
         Shelf shelf = shelfRepository.findById(shelfId).orElseThrow(() ->
                 new ShelfNotFoundException("Cannot find shelf with id: " + shelfId));
+        if (shelvedBookRepository.existsByBook_IdAndShelf_Id(bookId, shelfId)) {
+            throw new AlreadyExistsException("Book " + book.getTitle() + " already on shelf " + shelf.getShelfName());
+        }
         ShelvedBook shelvedBook = new ShelvedBook();
         shelvedBook.setBook(book);
         shelvedBook.setShelf(shelf);
@@ -73,7 +73,8 @@ public class ShelvedBookService {
                         .orElseThrow(() ->
                                 new ShelvedBookNotFoundException("Cannot find book with id " + shelvedBookId + "on shelf " + shelfId));
         shelvedBook.setBook(null);
-        shelvedBookRepository.delete(shelvedBook);
+        shelvedBook.setShelf(null);
+        shelvedBookRepository.deleteShelvedBook(shelvedBookId);
     }
 
     public List<ShelvedBookDto> findAllShelvedBooksByShelf(long userId, long shelfId, Optional<String> searchTerm) {
